@@ -27,6 +27,11 @@ def add(x: float, y: float) -> float:
     return float(x + y)
 
 
+def sub(x: float, y: float) -> float:
+    "$f(x, y) = x - y$"
+    return x - y
+
+
 def neg(x: float) -> float:
     "$f(x) = -x$"
     return float(-x)
