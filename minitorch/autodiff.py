@@ -51,6 +51,7 @@ class Variable(Protocol):
 
     def chain_rule(self, d_output: Any) -> Iterable[Tuple["Variable", Any]]:
         pass
+    
 
 
 def topological_sort(variable: Variable) -> Iterable[Variable]:
@@ -64,22 +65,15 @@ def topological_sort(variable: Variable) -> Iterable[Variable]:
         Non-constant Variables in topological order starting from the right.
     """
     # TODO: Implement for Task 1.4.
-    # q = [variable]
-    # while len(q) > 0:
-    #     var = q.pop(0)
-    #     if not var.is_constant():
-    #         yield var
-    #         for parent in var.parents:
-    #             q.append(parent)
     visited: List[int] = list()
     ordered_vars: List[Variable] = list()
 
     def visit(variable: Variable) -> None:
         if variable.is_constant() or variable.unique_id in visited:
             return
-        if not variable.is_leaf():
-            for input_var in variable.parents:
-                visit(input_var)
+        # if not variable.is_leaf():
+        for input_var in variable.parents:
+            visit(input_var)
         visited.append(variable.unique_id)
         ordered_vars.insert(0, variable)
 
@@ -99,13 +93,6 @@ def backpropagate(variable: Variable, deriv: Any) -> None:
     No return. Should write to its results to the derivative values of each leaf through `accumulate_derivative`.
     """
     # TODO: Implement for Task 1.4.
-    # d = {}
-    # for var in topological_sort(variable):
-    #     if var.is_leaf():
-    #         var.accumulate_derivative(deriv)
-    #     else:
-    #         for parent, derive in var.chain_rule(d.get(var.unique_id, 1)):
-    #             d[parent.unique_id] = d.get(parent.unique_id, 0) + derive
     ordered_vars: Iterable[Variable] = topological_sort(variable)
     # Record the derivative of each variable
     derivatives: Dict[int, Any] = {var.unique_id: 0 for var in ordered_vars}
